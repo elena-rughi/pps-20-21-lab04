@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 object Lists extends App {
 
   // A generic linkedlist
-  sealed trait List[E]
+  sealed trait List[+E]
 
   // a companion object (i.e., module) for List
   object List {

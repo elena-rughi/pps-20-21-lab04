@@ -7,7 +7,7 @@ import u04lab.code.Lists._
 trait Student {
   def name: String
   def year: Int
-  def enrolling(course: Course): Unit // the student participates to a Course
+  def enrolling(course: Course*): Unit // the student participates to a Course
   def courses: List[String] // names of course the student participates to
   def hasTeacher(teacher: String): Boolean // is the student participating to a course of this teacher?
 }
@@ -22,7 +22,11 @@ object Student {
   private case class StudentImpl(override val name: String, override val year: Int) extends Student {
     private var c: List[Course] = Nil()
 
-    override def enrolling(course: Course): Unit = c = append(c, Cons(course, Nil()))
+    override def enrolling(course: Course*): Unit = {
+      for (i <- course) {
+        c = append(c, Cons(i, Nil()))
+      }
+    }
 
     override def courses: List[String] = map(c)(course => course.name)
 
@@ -45,9 +49,12 @@ object Try extends App {
   s1.enrolling(cPPS)
   s1.enrolling(cPCD)
   s2.enrolling(cPPS)
+  /*
   s3.enrolling(cPPS)
   s3.enrolling(cPCD)
   s3.enrolling(cSDR)
+   */
+  s3.enrolling(cPPS, cPCD, cSDR)
   println(s1.courses, s2.courses, s3.courses) // (Cons(PCD,Cons(PPS,Nil())),Cons(PPS,Nil()),Cons(SDR,Cons(PCD,Cons(PPS,Nil()))))
   println(s1.hasTeacher("Ricci")) // true
   println(s1.hasTeacher("D'Angelo")) // false

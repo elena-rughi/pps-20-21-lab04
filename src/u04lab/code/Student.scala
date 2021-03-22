@@ -1,7 +1,8 @@
 package u04lab.code
 
 import Lists._
-import u04lab.code.Lists.List.Cons // import custom List type (not the one in Scala stdlib)
+import u04lab.code.Lists.List._ // import custom List type (not the one in Scala stdlib)
+import u04lab.code.Lists._
 
 trait Student {
   def name: String
@@ -17,11 +18,21 @@ trait Course {
 }
 
 object Student {
-  def apply(name: String, year: Int = 2017): Student = ???
+  def apply(name: String, year: Int = 2017): Student = StudentImpl(name, year)
+  private case class StudentImpl(override val name: String, override val year: Int) extends Student {
+    private var c: List[Course] = Nil()
+
+    override def enrolling(course: Course): Unit = c = append(c, Cons(course, Nil()))
+
+    override def courses: List[String] = map(c)(course => course.name)
+
+    override def hasTeacher(teacher: String): Boolean = contains(map(c)(course => course.teacher), teacher)
+  }
 }
 
 object Course {
-  def apply(name: String, teacher: String): Course = ???
+  def apply(name: String, teacher: String): Course = CourseImpl(name, teacher)
+  private case class CourseImpl(override val name: String, override val teacher: String) extends Course
 }
 
 object Try extends App {
@@ -39,6 +50,7 @@ object Try extends App {
   s3.enrolling(cSDR)
   println(s1.courses, s2.courses, s3.courses) // (Cons(PCD,Cons(PPS,Nil())),Cons(PPS,Nil()),Cons(SDR,Cons(PCD,Cons(PPS,Nil()))))
   println(s1.hasTeacher("Ricci")) // true
+  println(s1.hasTeacher("D'Angelo")) // false
 }
 
 /** Hints:
